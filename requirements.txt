@@ -1,1 +1,3 @@
-tushare==1.2.62pandas==1.2.4streamlit==0.83.0
+tushare==1.2.62
+pandas==1.2.4
+streamlit==0.83.0
