@@ -1,3 +1,1 @@
-pip install tushare
-pip install pandas
-pip install streamlit
+tushare==1.2.62pandas==1.2.4streamlit==0.83.0
