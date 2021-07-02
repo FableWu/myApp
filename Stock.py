@@ -51,6 +51,7 @@ pressed = st.button('Filter')
 if pressed:
     filter_list = []
     for ts_code in filter_alldata()['ts_code']:
+        ts.set_token('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
         df = ts.pro_bar(ts_code=ts_code, start_date=minus60, end_date=today, ma=[5, 10, 20, 30, 60])
         if (df.loc[df.index[0], 'ma5'] >= df.loc[df.index[0], 'ma10']) and (df.loc[df.index[1], 'ma5'] < df.loc[df.index[1], 'ma10']):
             # print(allData.loc[allData['ts_code'] == ts_code, 'name'].values[0])
