@@ -12,6 +12,9 @@ minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 
 starttime = datetime.now()
 
+st.write("username:", st.secrets["username"])
+st.write("password:", st.secrets["password"])
+
 
 @st.cache()
 def filter_alldata():
