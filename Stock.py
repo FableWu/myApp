@@ -13,7 +13,6 @@ minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 starttime = datetime.now()
 
 
-@st.cache()
 def filter_alldata():
     word = '新能源|新能源汽车|人工智能|5G'
 
