@@ -7,7 +7,7 @@ import streamlit as st
 pd.set_option('display.max_columns', 100)
 pd.set_option('display.max_rows', 1000)
 
-today = (datetime.today()-timedelta(days=2)).strftime('%Y%m%d')
+today = (datetime.today()).strftime('%Y%m%d')
 minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 
 starttime = datetime.now()
