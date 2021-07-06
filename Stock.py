@@ -7,7 +7,9 @@ import streamlit as st
 pd.set_option('display.max_columns', 100)
 pd.set_option('display.max_rows', 1000)
 
-today = (datetime.today()).strftime('%Y%m%d')
+selectValue = st.selectbox('Select a day', [0, 1, 2])
+
+today = (datetime.today()-timedelta(days=selectValue)).strftime('%Y%m%d')
 minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 
 starttime = datetime.now()
