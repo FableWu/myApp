@@ -3,7 +3,7 @@ import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
 
-# st.set_page_config(layout='wide')
+starttime = datetime.now()
 pd.set_option('display.max_columns', 100)
 pd.set_option('display.max_rows', 1000)
 
@@ -11,8 +11,6 @@ selectValue = st.selectbox('Select a day', [0, 1, 2])
 
 today = (datetime.today()-timedelta(days=selectValue)).strftime('%Y%m%d')
 minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
-
-starttime = datetime.now()
 
 
 def filter_alldata():
@@ -45,7 +43,12 @@ def filter_alldata():
     allData = allData.sort_values(by=['change'], ascending=False)
     allData.reset_index(drop=True, inplace=True)
     return allData
-# allData.to_excel(f'Stock_{today}.xlsx', index=False)
+
+
+@st.cache
+def cache_data():
+    filter_alldata()
+
 
 pressed = st.button('Filter')
 
@@ -60,7 +63,9 @@ if pressed:
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
     st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['name'].str.strip())
 else:
-    st.write(filter_alldata())
+    if cache_data().empty is False:
+        st.write(cache_data())
+    else:
+        st.write(filter_alldata())
 
 st.write(f'Time use: {datetime.now() - starttime}')
-
