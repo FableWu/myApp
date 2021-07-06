@@ -24,8 +24,8 @@ def filter_alldata():
 
     companyData = pro.stock_company(fields='ts_code, manager, reg_capital, setup_date, province, city, introduction, employees, main_business, business_scope')
 
-    bak_basic = pro.bak_basic(trade_date=today, fields='pe, float_share, total_share, total_assets, liquid_assets, fixed_assets, reserved, reserved_pershare,'
-                                                       'eps, bvps, pb, undp, per_undp, rev_yoy, profit_yoy, gpr, npr, holder_num')
+    # bak_basic = pro.bak_basic(trade_date=today, fields='pe, float_share, total_share, total_assets, liquid_assets, fixed_assets, reserved, reserved_pershare,'
+    #                                                    'eps, bvps, pb, undp, per_undp, rev_yoy, profit_yoy, gpr, npr, holder_num')
 
 
     basicInfo = pd.merge(stockBasic, companyData, on='ts_code', how='outer')
@@ -63,7 +63,7 @@ if pressed:
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
     st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['name'].str.strip())
 else:
-    if cache_data().empty is False:
+    if cache_data() is not None and cache_data().empty is False:
         st.write(cache_data())
     else:
         st.write(filter_alldata())
