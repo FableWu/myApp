@@ -3,14 +3,14 @@ import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
 
-# st.set_page_config(layout='wide')
+starttime = datetime.now()
 pd.set_option('display.max_columns', 100)
 pd.set_option('display.max_rows', 1000)
 
-today = (datetime.today()).strftime('%Y%m%d')
-minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
+selectValue = st.selectbox('Select a day', [0, 1, 2])
 
-starttime = datetime.now()
+today = (datetime.today()-timedelta(days=selectValue)).strftime('%Y%m%d')
+minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 
 
 def filter_alldata():
@@ -24,8 +24,8 @@ def filter_alldata():
 
     companyData = pro.stock_company(fields='ts_code, manager, reg_capital, setup_date, province, city, introduction, employees, main_business, business_scope')
 
-    bak_basic = pro.bak_basic(trade_date=today, fields='pe, float_share, total_share, total_assets, liquid_assets, fixed_assets, reserved, reserved_pershare,'
-                                                       'eps, bvps, pb, undp, per_undp, rev_yoy, profit_yoy, gpr, npr, holder_num')
+    # bak_basic = pro.bak_basic(trade_date=today, fields='pe, float_share, total_share, total_assets, liquid_assets, fixed_assets, reserved, reserved_pershare,'
+    #                                                    'eps, bvps, pb, undp, per_undp, rev_yoy, profit_yoy, gpr, npr, holder_num')
 
 
     basicInfo = pd.merge(stockBasic, companyData, on='ts_code', how='outer')
@@ -35,7 +35,6 @@ def filter_alldata():
     allData = allData[(allData['market'].isin(['主板']))
                       & (allData['list_status'] == 'L')
                       & (allData['close'] <= 5)
-                      & (allData['reg_capital'] >= 200000.0000)
                       & ((allData['name'].str.contains('ST')) == False)
                       & ((allData['introduction'].str.contains(word))
                       | ((allData['business_scope'].str.contains(word)))
@@ -44,6 +43,12 @@ def filter_alldata():
     allData = allData.sort_values(by=['change'], ascending=False)
     allData.reset_index(drop=True, inplace=True)
     return allData
+
+
+@st.cache
+def cache_data():
+    filter_alldata()
+
 
 pressed = st.button('Filter')
 
@@ -58,7 +63,9 @@ if pressed:
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
     st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['name'].str.strip())
 else:
-    st.write(filter_alldata())
+    if cache_data() is not None and cache_data().empty is False:
+        st.write(cache_data())
+    else:
+        st.write(filter_alldata())
 
 st.write(f'Time use: {datetime.now() - starttime}')
-
