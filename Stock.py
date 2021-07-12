@@ -35,6 +35,7 @@ def filter_alldata():
     allData = allData[(allData['market'].isin(['主板']))
                       & (allData['list_status'] == 'L')
                       & (allData['close'] <= 5)
+                      & (allData['reg_capital'] >= 200000.0000)
                       & ((allData['name'].str.contains('ST')) == False)
                       & ((allData['introduction'].str.contains(word))
                       | ((allData['business_scope'].str.contains(word)))
