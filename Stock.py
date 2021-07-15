@@ -37,9 +37,10 @@ def filter_alldata():
                       & (allData['close'] <= 5)
                       & (allData['reg_capital'] >= 200000.0000)
                       & ((allData['name'].str.contains('ST')) == False)
-                      & ((allData['introduction'].str.contains(word))
-                      | ((allData['business_scope'].str.contains(word)))
-                      | ((allData['main_business'].str.contains(word))))]
+#                       & ((allData['introduction'].str.contains(word))
+#                       | ((allData['business_scope'].str.contains(word)))
+#                       | ((allData['main_business'].str.contains(word))))
+                     ]
 
     allData = allData.sort_values(by=['change'], ascending=False)
     allData.reset_index(drop=True, inplace=True)
