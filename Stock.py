@@ -8,7 +8,7 @@ starttime = datetime.now()
 pd.set_option('display.max_columns', 100)
 pd.set_option('display.max_rows', 1000)
 
-selectValue = st.selectbox('Select a day', [0, 1, 2])
+selectValue = st.selectbox('Select a day', [0, 1, 2, 3])
 
 today = (datetime.today()-timedelta(days=selectValue)).strftime('%Y%m%d')
 minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
