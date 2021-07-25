@@ -63,7 +63,7 @@ if pressed:
             # print(allData.loc[allData['ts_code'] == ts_code, 'name'].values[0])
             filter_list.append(ts_code)
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
-    st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['name'].str.strip())
+    st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['stock_name'].str.strip())
 else:
     if cache_data() is not None and cache_data().empty is False:
         st.write(cache_data())
