@@ -2,6 +2,7 @@ import tushare as ts
 import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
+from functools import reduce
 
 starttime = datetime.now()
 pd.set_option('display.max_columns', 100)
@@ -18,31 +19,29 @@ def filter_alldata():
 
     pro = ts.pro_api('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
 
-    currentTradeData = pro.daily(trade_date=today)
+    gupiaoliebiao = pro.stock_basic(fields='ts_code, name, market')
 
-    stockBasic = pro.stock_basic(fields='ts_code, name, fullname, area, industry, market, exchange, list_status, list_date, delist_date')
+    beiyongliebiao = pro.bak_basic(trade_date=today, fields='ts_code, pe, float_share, pb')
 
-    companyData = pro.stock_company(fields='ts_code, manager, reg_capital, setup_date, province, city, introduction, employees, main_business, business_scope')
+    rixianhangqing = pro.daily(trade_date=today, fields='ts_code, close')
 
-    # bak_basic = pro.bak_basic(trade_date=today, fields='pe, float_share, total_share, total_assets, liquid_assets, fixed_assets, reserved, reserved_pershare,'
-    #                                                    'eps, bvps, pb, undp, per_undp, rev_yoy, profit_yoy, gpr, npr, holder_num')
+    companyData = pro.stock_company(fields='ts_code, introduction, main_business, business_scope')
 
+    mergelist = [gupiaoliebiao, beiyongliebiao, rixianhangqing, companyData]
 
-    basicInfo = pd.merge(stockBasic, companyData, on='ts_code', how='outer')
+    allData = reduce(lambda left, right: pd.merge(left, right, on='ts_code', how='inner'), mergelist)
 
-    allData = pd.merge(currentTradeData, basicInfo, on='ts_code', how='left')
-
-    allData = allData[(allData['market'].isin(['主板']))
-                      & (allData['list_status'] == 'L')
-                      & (allData['close'] <= 5)
-                      & (allData['reg_capital'] >= 200000.0000)
+    allData = allData[(allData['market'].isin(['主板', '中小板']))
+                      & (allData['pe'] > 0)
+                      & (allData['pb'] > 0)
+                      & (allData['float_share'] < 30)
+                      & (allData['close'] <= 10)
                       & ((allData['name'].str.contains('ST')) == False)
                       & ((allData['introduction'].str.contains(word))
-                      | ((allData['business_scope'].str.contains(word)))
-                      | ((allData['main_business'].str.contains(word))))
-    ]
+                         | ((allData['business_scope'].str.contains(word)))
+                         | ((allData['main_business'].str.contains(word))))]
 
-    allData = allData.sort_values(by=['change'], ascending=False)
+    allData = allData.sort_values(by=['pe'], ascending=False)
     allData.reset_index(drop=True, inplace=True)
     return allData
 
