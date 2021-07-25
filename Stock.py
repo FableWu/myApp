@@ -42,6 +42,7 @@ def filter_alldata():
                          | ((allData['main_business'].str.contains(word))))]
 
     allData = allData.sort_values(by=['pe'], ascending=False)
+    allData.columns.values[1] = 'stock_name'
     allData.reset_index(drop=True, inplace=True)
     return allData
 
