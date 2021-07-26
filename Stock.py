@@ -17,7 +17,7 @@ minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 def filter_alldata():
     word = '新能源|新能源汽车|人工智能|5G'
 
-    pro = ts.pro_api('b36a134c5cccd8fb29175eedcce7efee4eca3558b3a7429d7f40071a')
+    pro = ts.pro_api('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
 
     gupiaoliebiao = pro.stock_basic(fields='ts_code, name, market')
 
@@ -57,13 +57,12 @@ pressed = st.button('Filter')
 if pressed:
     filter_list = []
     for ts_code in filter_alldata()['ts_code']:
-        ts.set_token('b36a134c5cccd8fb29175eedcce7efee4eca3558b3a7429d7f40071a')
+        ts.set_token('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
         df = ts.pro_bar(ts_code=ts_code, start_date=minus60, end_date=today, ma=[5, 10, 20, 30, 60])
         if (df.loc[df.index[0], 'ma5'] >= df.loc[df.index[0], 'ma10']) and (df.loc[df.index[1], 'ma5'] < df.loc[df.index[1], 'ma10']):
             # print(allData.loc[allData['ts_code'] == ts_code, 'name'].values[0])
             filter_list.append(ts_code)
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
-    st.table(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)]['stock_name'].str.strip())
 else:
     if cache_data() is not None and cache_data().empty is False:
         st.write(cache_data())
