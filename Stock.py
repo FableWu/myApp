@@ -13,11 +13,15 @@ selectValue = st.selectbox('Select a day', [0, 1, 2, 3])
 today = (datetime.today()-timedelta(days=selectValue)).strftime('%Y%m%d')
 minus60 = (datetime.today() - timedelta(days=100)).strftime('%Y%m%d')
 
+token = '2280de2d7dcc59c588cefecce18206e0a81eb381b63f30ad75a7b270'
+# token = 'b36a134c5cccd8fb29175eedcce7efee4eca3558b3a7429d7f40071a'
+# token = '44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c'
+
 
 def filter_alldata():
     word = '新能源|新能源汽车|人工智能|5G'
 
-    pro = ts.pro_api('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
+    pro = ts.pro_api(token)
 
     gupiaoliebiao = pro.stock_basic(fields='ts_code, name, market')
 
@@ -47,26 +51,17 @@ def filter_alldata():
     return allData
 
 
-@st.cache
-def cache_data():
-    filter_alldata()
-
-
 pressed = st.button('Filter')
 
 if pressed:
     filter_list = []
     for ts_code in filter_alldata()['ts_code']:
-        ts.set_token('44fdd46cdf0f953ab7049a703a5b8c0b06347f085875788cb70c495c')
+        ts.set_token(token)
         df = ts.pro_bar(ts_code=ts_code, start_date=minus60, end_date=today, ma=[5, 10, 20, 30, 60])
         if (df.loc[df.index[0], 'ma5'] >= df.loc[df.index[0], 'ma10']) and (df.loc[df.index[1], 'ma5'] < df.loc[df.index[1], 'ma10']):
-            # print(allData.loc[allData['ts_code'] == ts_code, 'name'].values[0])
             filter_list.append(ts_code)
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
 else:
-    if cache_data() is not None and cache_data().empty is False:
-        st.write(cache_data())
-    else:
-        st.write(filter_alldata())
+    st.write(filter_alldata())
 
 st.write(f'Time use: {datetime.now() - starttime}')
