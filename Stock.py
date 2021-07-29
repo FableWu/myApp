@@ -46,12 +46,6 @@ def filter_alldata():
     allData.reset_index(drop=True, inplace=True)
     return allData
 
-
-@st.cache
-def cache_data():
-    filter_alldata()
-
-
 pressed = st.button('Filter')
 
 if pressed:
@@ -64,9 +58,6 @@ if pressed:
             filter_list.append(ts_code)
     st.dataframe(filter_alldata()[filter_alldata()['ts_code'].isin(filter_list)])
 else:
-    if cache_data() is not None and cache_data().empty is False:
-        st.write(cache_data())
-    else:
-        st.write(filter_alldata())
+    st.write(filter_alldata())
 
 st.write(f'Time use: {datetime.now() - starttime}')
