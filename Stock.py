@@ -19,7 +19,7 @@ token = '2280de2d7dcc59c588cefecce18206e0a81eb381b63f30ad75a7b270'
 
 
 def filter_alldata():
-    word = '新能源|新能源汽车|人工智能|5G'
+    word = '新能源|半导体|人工智能|5G|光伏'
 
     pro = ts.pro_api(token)
 
