@@ -19,7 +19,7 @@ token = '2280de2d7dcc59c588cefecce18206e0a81eb381b63f30ad75a7b270'
 
 
 def filter_alldata():
-    word = '新能源|半导体|人工智能|5G|光伏'
+    word = '新能源|半导体|芯片|5G|光伏'
 
     pro = ts.pro_api(token)
 
@@ -39,7 +39,7 @@ def filter_alldata():
                       & (allData['pe'] > 0)
                       & (allData['pb'] > 0)
                       & (allData['float_share'] < 30)
-                      & (allData['close'] <= 10)
+                      & (allData['close'] <= 7)
                       & ((allData['name'].str.contains('ST')) == False)
                       & ((allData['introduction'].str.contains(word))
                          | ((allData['business_scope'].str.contains(word)))
